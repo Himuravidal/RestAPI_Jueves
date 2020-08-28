@@ -6,9 +6,12 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Window
 import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.restapi.model.pojo.Post
 import com.example.restapi.model.remote.RetrofitClient
+import com.example.restapi.viewmodel.PostViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.new_post_dialog.*
 import retrofit2.Call
@@ -18,50 +21,31 @@ import retrofit2.Callback
 class MainActivity : AppCompatActivity() {
 
     private var postsList =  ArrayList<Post>()
-    private lateinit var viewAdapter: RecyclerView.Adapter<*>
+    private lateinit var viewAdapter: PostAdapter
+    private lateinit var mViewModel: PostViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        //Iniciando el ViewModel
+        mViewModel = ViewModelProvider(this).get(PostViewModel::class.java)
+        // Iniciando el adapter
         viewAdapter = PostAdapter(postsList)
         postsRecyclerView.adapter = viewAdapter
 
-        loadApiData()
-        //delete()
-
+        //Boton fab añadir un nuevo post
         addPost.setOnClickListener {
             showDialog()
         }
 
-    }
-
-    private fun loadApiData() {
-        val service = RetrofitClient.retrofitInstance()
-        val call = service.getAllPosts()
-
-        call.enqueue(object : Callback<List<Post>> {
-            override fun onResponse(
-                call: Call<List<Post>>,
-                response: Response<List<Post>>
-            ) {
-                response.body()?.map {
-                    Log.d("MAIN", "${it.id} - ${it.title}")
-                    postsList.add(it)
-                }
-                viewAdapter.notifyDataSetChanged()
-            }
-
-            override fun onFailure(call: Call<List<Post>>, t: Throwable) {
-                Log.d("MAIN", "Error: " + t)
-                Toast.makeText(
-                    applicationContext,
-                    "Error: no pudimos recuperar los posts desde el api",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+      // mViewModel.fetchFromServer()
+        mViewModel.getDataFromDB().observe(this, Observer {
+            viewAdapter.updateData(it)
         })
+
     }
+
+
 
 
     private fun delete() {
