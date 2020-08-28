@@ -33,7 +33,6 @@ class MainActivity : AppCompatActivity() {
        // loadApiData()
         //delete()
 
-
         addPost.setOnClickListener {
             showDialog()
         }

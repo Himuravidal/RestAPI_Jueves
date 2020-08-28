@@ -12,7 +12,7 @@ interface Api {
     @DELETE("/posts/{postId}")
     fun deletePost(@Path("postId") postId: Int?) : Call<Void>
 
-   // @Headers("Content-Type: application/json; charset=UTF-8")
+    @Headers("Content-Type: application/json; charset=UTF-8")
     @POST("/posts")
     fun createNewPost(@Body post: Post): Call<Post>
 
