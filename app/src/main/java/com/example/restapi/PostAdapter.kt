@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.restapi.pojo.Post
+import com.example.restapi.model.pojo.Post
 import kotlinx.android.synthetic.main.list_item.view.*
 
 class PostAdapter(private val myDataset: List<Post>) :

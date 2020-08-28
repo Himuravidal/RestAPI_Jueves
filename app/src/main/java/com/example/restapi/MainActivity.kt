@@ -4,14 +4,11 @@ import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.view.Window
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.example.restapi.pojo.Post
-import com.example.restapi.remote.RetrofitClient
+import com.example.restapi.model.pojo.Post
+import com.example.restapi.model.remote.RetrofitClient
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.new_post_dialog.*
 import retrofit2.Call
@@ -30,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         viewAdapter = PostAdapter(postsList)
         postsRecyclerView.adapter = viewAdapter
 
-       // loadApiData()
+        loadApiData()
         //delete()
 
         addPost.setOnClickListener {
@@ -43,10 +40,10 @@ class MainActivity : AppCompatActivity() {
         val service = RetrofitClient.retrofitInstance()
         val call = service.getAllPosts()
 
-        call.enqueue(object : Callback<ArrayList<Post>> {
+        call.enqueue(object : Callback<List<Post>> {
             override fun onResponse(
-                call: Call<ArrayList<Post>>,
-                response: Response<ArrayList<Post>>
+                call: Call<List<Post>>,
+                response: Response<List<Post>>
             ) {
                 response.body()?.map {
                     Log.d("MAIN", "${it.id} - ${it.title}")
@@ -55,7 +52,7 @@ class MainActivity : AppCompatActivity() {
                 viewAdapter.notifyDataSetChanged()
             }
 
-            override fun onFailure(call: Call<ArrayList<Post>>, t: Throwable) {
+            override fun onFailure(call: Call<List<Post>>, t: Throwable) {
                 Log.d("MAIN", "Error: " + t)
                 Toast.makeText(
                     applicationContext,

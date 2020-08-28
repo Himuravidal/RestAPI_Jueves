@@ -1,4 +1,4 @@
-package com.example.restapi.remote
+package com.example.restapi.model.remote
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
